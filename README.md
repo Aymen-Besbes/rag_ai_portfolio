@@ -12,7 +12,7 @@ Powered by **Sentence Transformers**, **FAISS**, and **Google Gemini**, it retri
 
 ---
 ## 📁 Project Structure
-
+```plaintext
 ai_portfolio_rag/
 ├── data/ # Raw resume text file
 │ └── resume.txt
@@ -31,7 +31,7 @@ ai_portfolio_rag/
 ├── requirements.txt # Python dependencies
 ├── .env # API keys and configuration
 └── README.md
-
+```
 
 ---
 
@@ -106,15 +106,16 @@ Place a strucured txt - Markdown document under data folder using this structute
 
 ### Flowchart
 
+```mermaid
 flowchart TD
-    A[Raw Resume (Markdown)] --> B[Chunking (chunking.py)]
-    B --> C[Embeddings (embedding.py)]
-    C --> D[FAISS Index & Chunks (embeddings/)]
-    E[User Query] --> F[Retrieve top-k chunks (retrieval.py)]
-    F --> G[Build Prompt (prompt_gen.py)]
-    G --> H[Google Gemini API (chat.py)]
-    H --> I[Structured Answer]
-
+    A[Raw_Resume] --> B[Chunking_chunking_py]
+    B --> C[Embeddings_embedding_py]
+    C --> D[FAISS_Index_and_Chunks]
+    E[User_Query] --> F[Retrieve_top_k_chunks]
+    F --> G[Build_Prompt_prompt_gen_py]
+    G --> H[Google_Gemini_API_chat_py]
+    H --> I[Structured_Answer]
+```
 ### Explanation
 ## RAG Pipeline Components
 
