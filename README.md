@@ -35,7 +35,7 @@ ai_portfolio_rag/
 
 ---
 
-## ⚙️ Setup
+## ⚙️ Quick Start
 
 ### 1. Clone repository
 ```bash
@@ -100,6 +100,10 @@ Place a strucured txt - Markdown document under data folder using this structute
 [Completed / Active / Prototype]
 ```
 
+### 6. Launch the app:
+```bash
+streamlit run src/app.py
+```
 ---
 
 ## 🔄 RAG Pipeline 
@@ -165,12 +169,7 @@ flowchart TD
 - Streamlit frontend.
 - Displays structured answers with context.
 
----
 
-## Launch the app:
-```bash
-streamlit run src/app.py
-```
 
 --- 
 
