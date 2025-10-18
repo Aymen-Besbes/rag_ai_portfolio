@@ -13,7 +13,7 @@ EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "sentence-transformers/all-MiniLM
 MODEL = os.getenv("MODEL", "gemini-2.5-flash")
 INDEX_PATH = os.getenv("INDEX_PATH", "embeddings/faiss_index.bin")
 CHUNKS_PATH = os.getenv("CHUNKS_PATH", "embeddings/chunks.json")
-RESUME_PATH = os.getenv("RESUME_PATH", r"data\\resume.txt")  
+RESUME_PATH = os.getenv("RESUME_PATH", r"data\\john.txt")  
 
 if __name__ == "__main__":
     print(f"GEMINI_API_KEY: {GEMINI_API_KEY}")

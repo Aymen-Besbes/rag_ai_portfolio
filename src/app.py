@@ -13,7 +13,7 @@ for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-# Chat input box (Enter key submits)
+# Chat input box 
 user_input = st.chat_input("Ask a question about the portfolio:")
 
 if user_input:

@@ -13,7 +13,7 @@ def build_prompt(query, retrieved_chunks):
     for i, (title, contents) in enumerate(merged_chunks.items()):
         context += f"\n### Context {i+1}:\n" + "\n".join(contents) + "\n"
 
-    system_prompt = """You are an AI assistant summarizing Aymen Besbes' professional portfolio.
+    system_prompt = """You are an AI assistant summarizing The john's professional portfolio.
 - Provide structured, factual answers ONLY from context.
 - For project lists, include all projects using their titles and objectives.
 - Use bullet points for achievements.

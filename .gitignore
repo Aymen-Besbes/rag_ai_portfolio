@@ -25,6 +25,4 @@ env/
 .env
 
 # FAISS index / embeddings
-embeddings/faiss_index.bin
-embeddings/chunks.json
 data/resume.txt
