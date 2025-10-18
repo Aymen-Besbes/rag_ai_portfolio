@@ -15,6 +15,33 @@ Powered by **Sentence Transformers**, **FAISS**, and **Google Gemini**, it retri
 - Interactive chat interface via Streamlit.
 
 ---
+## 📁 Project Structure
+```plaintext
+ai_portfolio_rag/
+├── data/ # Raw resume text file
+│ └── resume.txt
+├── embeddings/ 
+│ ├── faiss_index.bin
+│ └── chunks.json
+├── src/ 
+│ ├── app.py # Streamlit frontend
+│ ├── chat.py # Chat interface & model integration
+│ ├── chunking.py # Resume chunking logic
+│ ├── config.py # Environment variables & constants
+│ ├── embedding.py # Embedding generation + FAISS index builder
+│ ├── prompt_gen.py # Prompt generator for Gemini
+│ ├── retrieval.py # Retrieve relevant chunks via FAISS
+│ └── Evaluate.py # Evaluate Retrieval and generation
+├── requirements.txt # Python dependencies
+├── .env # API keys and configuration
+└── README.md
+```
+
+---
+
+## ⚙️ Quick Start
+
+### 1. Clone repository
 
 ## 🚀 Quick Start
 Run the app in under a minute:
@@ -89,6 +116,10 @@ Place a structured Markdown text file under `data/`:
 [Completed / Active / Prototype]
 ```
 
+### 6. Launch the app:
+```bash
+streamlit run src/app.py
+```
 ---
 
 ## 🔄 RAG Pipeline & Modules
@@ -117,6 +148,38 @@ flowchart TD
 
    * Generates embeddings for chunks using **Sentence Transformers**.
    * Creates FAISS index for efficient similarity search.
+
+**Reasoning:** Efficient, semantic embeddings; small memory footprint; suitable for short/medium text like resumes.
+
+---
+
+### 3. Retrieval (`retrieval.py`)
+- Lazy-loads FAISS index and chunk data.
+- Computes query embeddings and retrieves top-k chunks via L2 distance.
+- Ensures context completeness, merges duplicates, resolves pronouns.
+
+**Reasoning:** FAISS top-k search is fast, easy to implement, and sufficient for small datasets.
+
+---
+
+### 4. Prompt Generation (`prompt_gen.py`)
+- Constructs structured prompts for **Google Gemini**.
+- Includes context chunks, system instructions, and user query.
+- Formats projects, achievements, and skills clearly.
+
+**Reasoning:** Structured prompts reduce hallucinations and produce consistent, factual answers.
+
+---
+
+### 5. RAG Chat (`chat.py`)
+- Combines retrieval and prompt generation.
+- Sends prompt to Gemini API.
+- Returns structured, context-aware responses.
+
+### 6. Web App (`app.py`):
+- Streamlit frontend.
+- Displays structured answers with context.
+
 
 3. **Retrieval (`retrieval.py`)**
 
