@@ -1,35 +1,25 @@
 import streamlit as st
 from chat import query_portfolio
-from retrieval import _load_resources  # import the initialization function
+from retrieval import _load_resources  
 
-# -----------------------------
 # Streamlit page setup
-# -----------------------------
 st.set_page_config(page_title="Portfolio RAG Assistant", page_icon="🤖", layout="centered")
 st.title("🤖 Portfolio RAG Assistant")
 
-# -----------------------------
 # Preload model, index, and chunks
-# -----------------------------
 with st.spinner("Loading model and portfolio data..."):
     _load_resources()
 
-# -----------------------------
 # Initialize chat history
-# -----------------------------
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# -----------------------------
 # Display existing chat messages
-# -----------------------------
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-# -----------------------------
-# Chat input box 
-# -----------------------------
+# Chat input 
 user_input = st.chat_input("Ask a question about the portfolio:")
 
 if user_input:

@@ -3,7 +3,29 @@
 A **Retrieval-Augmented Generation (RAG)** application for querying a structured professional portfolio or resume using natural language.
 Powered by **Sentence Transformers**, **FAISS**, and **Google Gemini**, it retrieves relevant resume chunks and generates structured, factual answers.
 
-[![Live Demo](https://img.shields.io/badge/Live-Demo-blue)](https://aymen-besbes-rag-ai-portfolio-srcapp-dev-wq7o4w.streamlit.app/)
+[![Live Demo](https://img.shields.io/badge/Live-Demo-blue)](https://ragaiportfolio-jomddiifktjgguvo57tah8.streamlit.app/)
+
+
+---
+
+## 📑 Table of Contents
+
+1. [Live Demo](#-live-demo)
+2. [Key Features](#-key-features)
+3. [Project Structure](#-project-structure)
+4. [Quick Start](#-quick-start)
+
+   1. [Clone Repository](#1-clone-repository)
+   2. [Create Virtual Environment](#2-create-virtual-environment-and-install-dependencies)
+   3. [Configure Environment Variables](#3-configure-environment-variables)
+   4. [Define Your Resume](#4-define-your-resume-under-data-folder)
+   5. [Generate Embeddings](#5-generate-embeddings)
+   6. [Launch the App](#6-launch-the-app)
+5. [RAG Pipeline & Modules](#-rag-pipeline--modules)
+6. [Evaluation](#-evaluation)
+7. [Potential Enhancements](#-potential-enhancements)
+8. [Screenshots / Demo](#-screenshots--demo)
+9. [Contact](#-contact)
 
 ---
 
@@ -11,9 +33,9 @@ Powered by **Sentence Transformers**, **FAISS**, and **Google Gemini**, it retri
 
 Try the AI Portfolio RAG Assistant instantly via this link:
 
-[Click here to test the live app](https://aymen-besbes-rag-ai-portfolio-srcapp-dev-wq7o4w.streamlit.app/)
+[Click here to test the live app](https://ragaiportfolio-jomddiifktjgguvo57tah8.streamlit.app/)
 
-> ✅ Includes a sample resume (John) for immediate testing.
+> ✅ Includes a sample portfolio (John) for immediate testing.
 
 ---
 
@@ -78,8 +100,8 @@ Create a `.env` file in the project root:
 
 ```env
 GEMINI_API_KEY=<YOUR_GEMINI_API_KEY>
-EMBEDDING_MODEL=<YOUR_EMBEDDING_MODEL>
-MODEL=<YOUR_MODEL>
+EMBEDDING_MODEL=sentence-transformers/all-MiniLM-L6-v2
+MODEL=gemini-2.5-flash
 INDEX_PATH=embeddings/faiss_index.bin
 CHUNKS_PATH=embeddings/chunks.json
 RESUME_PATH=data/resume.txt
@@ -144,6 +166,7 @@ streamlit run src/app.py
 ## 🔄 RAG Pipeline & Modules
 
 ```mermaid
+
 flowchart TD
     A[Raw Resume / Portfolio<br>(data/resume.txt)] --> B[Chunking Module<br>(chunking.py)]
     B --> C[Embedding Module<br>(embedding.py)]
@@ -192,21 +215,16 @@ flowchart TD
 ---
 
 ## 📊 Evaluation
-This evaluation was conducted using the resume of a fresh graduate AI Engineer. We queried an AI system about the projects undertaken by this AI Engineer and assessed the system’s performance in both **retrieval** and **generation** tasks.
+This evaluation used the resume of a fresh graduate AI Engineer to test an AI system’s performance on retrieval and generation tasks. A total of 20 queries were submitted to assess how effectively the system identified and described the engineer’s projects.
 
-## Queries and Results
+The system demonstrated near-optimal performance. It retrieved almost all relevant project data and generated answers fully consistent with the supporting context:
 
-| Query                          | Projects Recall | Faithfulness | Context Precision |
-| ------------------------------ | --------------- | ------------ | ----------------- |
-| Healthcare domain projects      | 1.0             | 1.0          | 1.0               |
-| Machine Learning projects       | 0.75            | 1.0          | 1.0               |
-| Dashboards / Visualization projects | 1.0         | 1.0          | 1.0               |
+| Metric                | Description                                                     |   Score  |
+| :-------------------- | :-------------------------------------------------------------- | :------: |
+| **Projects Recall**   | Fraction of expected projects correctly retrieved               | **0.95** |
+| **Faithfulness**      | Degree to which responses were grounded in retrieved data       | **1.00** |
+| **Context Precision** | Fraction of retrieved chunks accurately referenced in responses | **1.00** |
 
-## Metrics
-
-* **Projects Recall** : Fraction of expected projects correctly retrieved.  
-* **Faithfulness** : Degree to which the answers are grounded in retrieved data.  
-* **Context Precision** : Fraction of retrieved chunks that are actually referenced in the response.
 ---
 
 ## ⚡ Potential Enhancements
@@ -218,7 +236,7 @@ This evaluation was conducted using the resume of a fresh graduate AI Engineer. 
 
 ---
 ## 📷 Screenshots / Demo
-
+![Alt text](images/Screenshot.png)
 ## 📬 Contact
 
 **Author:** Aymen Besbes
