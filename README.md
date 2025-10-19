@@ -164,22 +164,8 @@ streamlit run src/app.py
 ---
 
 ## 🔄 RAG Pipeline & Modules
-
-```mermaid
-
-flowchart TD
-    A[Raw Resume / Portfolio\ndata/resume.txt] --> B[Chunking Module\nchunking.py]
-    B --> C[Embedding Module\nembedding.py]
-    C --> D[FAISS Index & Chunks\nembeddings/faiss_index.bin & chunks.json]
-    E[User Query] --> F[Retrieval Module\nretrieval.py\nTop-K semantic chunks]
-    F --> G[Prompt Generation Module\nprompt_gen.py]
-    G --> H[RAG Chat Module\nchat.py\nGoogle Gemini API]
-    H --> I[Structured Answer\nProjects, Skills, Experiences]
-
-    style A fill:#f9f,stroke:#333,stroke-width:2px
-    style I fill:#9f9,stroke:#333,stroke-width:2px
-
-```
+### System Architecture
+![Alt text](images/architecture.png)
 
 ### Pipeline Components
 
