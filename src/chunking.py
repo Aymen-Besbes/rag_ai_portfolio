@@ -30,7 +30,7 @@ def chunk_resume_data(resume_text, chunk_size=CHUNK_SIZE, overlap=CHUNK_OVERLAP)
                 chunks.append(f"{prefix}{chunk_text}")
             if end == len(buffer):
                 break
-            start = end - overlap  # overlap lines
+            start = end - overlap  
         buffer.clear()
 
     for line in lines:

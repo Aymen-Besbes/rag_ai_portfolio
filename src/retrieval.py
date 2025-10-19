@@ -58,9 +58,7 @@ def retrieve(query: str, k: int = TOP_K) -> list[tuple[str, float]]:
 
     return results
 
-# ------------------------------
-# Interactive CLI
-# ------------------------------
+# Use Example
 if __name__ == "__main__":
     _load_resources()
     print("Ready to accept queries. Type 'quit' to exit.\n")

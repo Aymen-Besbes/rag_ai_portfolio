@@ -168,13 +168,13 @@ streamlit run src/app.py
 ```mermaid
 
 flowchart TD
-    A[Raw Resume / Portfolio<br>(data/resume.txt)] --> B[Chunking Module<br>(chunking.py)]
-    B --> C[Embedding Module<br>(embedding.py)]
-    C --> D[FAISS Index & Chunks<br>(embeddings/faiss_index.bin & chunks.json)]
-    E[User Query] --> F[Retrieval Module<br>(retrieval.py)<br>Top-K semantic chunks]
-    F --> G[Prompt Generation Module<br>(prompt_gen.py)]
-    G --> H[RAG Chat Module<br>(chat.py)<br>Google Gemini API]
-    H --> I[Structured Answer<br>Projects, Skills, Experiences]
+    A[Raw Resume / Portfolio\ndata/resume.txt] --> B[Chunking Module\nchunking.py]
+    B --> C[Embedding Module\nembedding.py]
+    C --> D[FAISS Index & Chunks\nembeddings/faiss_index.bin & chunks.json]
+    E[User Query] --> F[Retrieval Module\nretrieval.py\nTop-K semantic chunks]
+    F --> G[Prompt Generation Module\nprompt_gen.py]
+    G --> H[RAG Chat Module\nchat.py\nGoogle Gemini API]
+    H --> I[Structured Answer\nProjects, Skills, Experiences]
 
     style A fill:#f9f,stroke:#333,stroke-width:2px
     style I fill:#9f9,stroke:#333,stroke-width:2px
