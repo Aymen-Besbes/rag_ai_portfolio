@@ -1,80 +1,81 @@
+from collections import defaultdict
+
 def build_prompt(query, retrieved_chunks):
     """
-    Builds a RAG prompt with categorized context for an LLM.
-    - Categorizes chunks by headers: Experience vs Projects.
-    - Preserves order and removes duplicates.
-    - Includes short examples for guidance.
+    Builds a RAG prompt with clear instructions and context.
+    
+    Args:
+        query (str): The user query.
+        retrieved_chunks (list[tuple[str, float]] or list[str]): Retrieved chunks from retrieval.
+        
+    Returns:
+        str: A full prompt string to send to the LLM.
     """
-    # Remove duplicates, preserve order
-    unique_chunks = list(dict.fromkeys(retrieved_chunks))
+    # Extract chunk text if tuples are provided
+    chunk_texts = []
+    for c in retrieved_chunks:
+        if isinstance(c, tuple):
+            chunk_texts.append(c[0])  # take only text, ignore score
+        else:
+            chunk_texts.append(c)
 
-    # Categorize chunks
+    # Remove exact duplicates while preserving order
+    seen = set()
+    unique_chunks = []
+    for chunk in chunk_texts:
+        if chunk not in seen:
+            unique_chunks.append(chunk)
+            seen.add(chunk)
+
+    # Categorize chunks roughly by headings
     categorized = {"Experience": [], "Projects": [], "Other": []}
     for chunk in unique_chunks:
         header_line = chunk.split("\n", 1)[0].strip()
-        if header_line.startswith("## Project") or header_line.startswith("## Projects"):
+        if header_line.startswith("## Project") or header_line.startswith("## P"):
             categorized["Projects"].append(chunk)
         elif header_line.startswith("##") or header_line.startswith("# Professional Experiences"):
             categorized["Experience"].append(chunk)
         else:
             categorized["Other"].append(chunk)
 
-    # Build context section
+    # Merge chunks per category
     context = ""
-    for category, chunks in categorized.items():
-        if not chunks:
+    for cat_name, chunks_list in categorized.items():
+        if not chunks_list:
             continue
-        context += f"\n### {category} Contexts:\n"
-        for chunk in chunks:
-            context += f"{chunk}\n"
+        context += f"\n### {cat_name} Context:\n"
+        for i, c in enumerate(chunks_list, 1):
+            context += f"- {c}\n"
 
-    # System prompt instructions
-    system_prompt = """You are an expert AI assistant specializing in summarizing professional portfolios and resumes. 
-Your goal is to provide accurate, concise, and structured answers based solely on the provided context. 
-Always ensure factual correctness and clarity.
-
-Guidelines:
-1. Base your answers strictly on the retrieved context. Do NOT hallucinate or assume information.
-2. Highlight **project names, company names, skills, and technologies** in bold where appropriate.
-3. Use bullet points for achievements, skills, or lists.
-4. When describing skills, use the phrasing: "Applied [Skill] in [Project/Experience]."
-5. For project lists:
-   - Include the title and objective as the main description.
-   - Ignore Key Features, Results, or Technologies unless explicitly asked.
-   - Format each project as: "**[Project Name]:** [Short Description]".
-6. For experience summaries:
-   - Focus on responsibilities,dates, achievements, and skills applied.
-   - Organize answers in chronological or logical order.
-7. Resolve pronouns and ambiguous references using the context.
-8. If multiple relevant contexts exist, summarize and merge concisely without losing details.
-9. Maintain a professional, neutral tone.
-
+    # System instructions
+    system_prompt = """You are an AI-powered portfolio assistant for John. Your sole role is to respond to user queries about John’s professional experience, skills, and projects.
+Rules:
+- Provide structured, factual answers ONLY from context.
+- For project lists, include all projects using their titles and objectives.
+- Use bullet points for achievements.
+- Highlight project names and skills in bold where appropriate.
+- Resolve pronouns in follow-ups using context.
+- If the user asks to **list projects**, include all retrieved chunks under the "Projects" category.
+  - For each project, use the available Objective or title as the short description.
+  - Ignore Key Features, Results, or Technologies unless explicitly asked.
+  - Format each as: "**[Project Name]:** [Short Description]".
+- When multiple relevant contexts exist, summarize or merge them concisely.
+- Use bullet points for achievements or lists.
+- If the question concerns skills or technologies, specify the related project or experience.
+- Use the phrasing: "Applied [Skill] in …" when referring to skills used in projects.
 """
 
-    # Short example queries
+    # Short example
     examples = """
-### Example 1: List Projects
-Q: List all projects John worked on.
+### Example 1: AI/ML Experience
+Q: What is John's experience with AI?
 A:
-- **Enterprise Knowledge Assistant:** Build an internal RAG-based chatbot using LLMs to answer employee queries.
-- **RAG Document Summarizer:** Automate summarization of internal knowledge and research documents using LLMs.
-- **Chatbot for Customer Support:** Deploy a GPT-based chatbot for enterprise customer support.
-
-### Example 2: Experience Summary
-Q: Summarize John's experience as an AI Engineer.
-A:
-- Architected and deployed multilingual LLM and RAG pipelines.
-- Integrated AI solutions into enterprise platforms, improving efficiency by 30%.
-- Mentored junior engineers on prompt engineering and model optimization.
-
-### Example 3: Skills Inquiry
-Q: What skills did John apply in his projects?
-A:
-- Applied **Python, FAISS, and HuggingFace Transformers** in building RAG pipelines.
-- Applied **Docker and Kubernetes** for scalable deployment.
-- Applied **Streamlit and SQL** for data analysis dashboards.
+- Designed and deployed LLM-based knowledge assistants.
+- Built RAG pipelines for document summarization.
+- Implemented microservices for scalable AI inference.
 """
 
+    # Combine everything into the full prompt
     full_prompt = f"""{system_prompt}
 
 {examples}

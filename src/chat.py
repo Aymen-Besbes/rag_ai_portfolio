@@ -6,13 +6,12 @@ from google import genai
 # Initialize the GenAI client
 client = genai.Client(api_key=GEMINI_API_KEY)
 
-
 def query_portfolio(user_query: str, top_k: int = TOP_K) -> str:
     """
-    Queries about professional portfolio using a RAG approach.
+    Queries John's professional portfolio using RAG.
 
     Args:
-        user_query (str): The user's question.
+        user_query (str): User question.
         top_k (int): Number of top chunks to retrieve.
 
     Returns:
@@ -23,10 +22,13 @@ def query_portfolio(user_query: str, top_k: int = TOP_K) -> str:
     if not chunks:
         return "No relevant information found in the portfolio."
 
-    # Build prompt with categorized context
-    prompt = build_prompt(user_query, chunks)
+    # Convert to strings if tuples are returned (chunk_text, score)
+    string_chunks = [c[0] if isinstance(c, tuple) else c for c in chunks]
 
-    # Generate response from the LLM
+    # Build prompt
+    prompt = build_prompt(user_query, string_chunks)
+
+    # Generate response
     try:
         response = client.models.generate_content(model=MODEL, contents=prompt)
         return response.text.strip() if response.text else "No response generated."
@@ -42,9 +44,8 @@ if __name__ == "__main__":
         if user_input.lower() in ["exit", "quit"]:
             print("Exiting Portfolio Assistant. Goodbye!")
             break
-
         if not user_input:
-            continue  
+            continue
 
         answer = query_portfolio(user_input)
         print(f"\nAssistant:\n{answer}\n")
