@@ -28,7 +28,7 @@ TEST_QUERIES = [
         ]
     }
 ]
-TOP_K=15
+TOP_K=10
 def evaluate_queries(queries):
     results = []
 

@@ -5,9 +5,9 @@ import os
 load_dotenv()
 
 # Retrieve Environment variables' values
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-CHUNK_SIZE = int(os.getenv("CHUNK_SIZE", 700))
-CHUNK_OVERLAP = int(os.getenv("CHUNK_OVERLAP", 150))
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
+CHUNK_SIZE = int(os.getenv("CHUNK_SIZE", 150))
+CHUNK_OVERLAP = int(os.getenv("CHUNK_OVERLAP", 30))
 TOP_K = int(os.getenv("TOP_K", 10))
 EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "sentence-transformers/all-MiniLM-L6-v2")
 MODEL = os.getenv("MODEL", "gemini-2.5-flash")

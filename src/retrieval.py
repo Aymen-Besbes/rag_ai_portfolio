@@ -3,13 +3,12 @@ import json
 import numpy as np
 import faiss
 from sentence_transformers import SentenceTransformer
-from config import EMBEDDING_MODEL, INDEX_PATH, CHUNKS_PATH
+from config import EMBEDDING_MODEL, INDEX_PATH, CHUNKS_PATH,TOP_K
 
 # Global resources (lazy-loaded)
 _model = None
 _index = None
 _chunks = None
-
 
 def _load_resources():
     """Lazy-load the model, FAISS index, and chunks."""
@@ -38,38 +37,33 @@ def _load_resources():
     if _index.ntotal != len(_chunks):
         print("Warning: Number of vectors in the index and number of chunks do not match.")
 
-
-def retrieve(query: str, k: int = 10) -> list[str]:
+def retrieve(query: str, k: int = TOP_K) -> list[tuple[str, float]]:
     """
-    Retrieve the top-k most relevant chunks for a given query.
-    
-    Args:
-        query (str): The search query.
-        k (int): Number of top results to return.
-        
-    Returns:
-        list[str]: Top-k chunks matching the query.
+    Retrieve the top-k most relevant chunks for a query using cosine similarity.
+    Returns a list of (chunk_text, similarity_score) tuples.
     """
     _load_resources()
 
     # Compute query embedding
     query_embedding = np.array(_model.encode([query])).astype('float32')
+    faiss.normalize_L2(query_embedding)  # normalize for cosine similarity
 
-    # Search in FAISS
+    # Search in FAISS (inner product on normalized vectors = cosine similarity)
     distances, indices = _index.search(query_embedding, k)
 
-    # Collect matching chunks
     results = []
-    for idx in indices[0]:
+    for i, idx in enumerate(indices[0]):
         if 0 <= idx < len(_chunks):
-            results.append(_chunks[idx])
+            results.append((_chunks[idx], float(distances[0][i])))
 
     return results
 
-
+# ------------------------------
+# Interactive CLI
+# ------------------------------
 if __name__ == "__main__":
     _load_resources()
-    print("Ready to accept queries. Type 'quit' to exit.")
+    print("Ready to accept queries. Type 'quit' to exit.\n")
 
     while True:
         query = input("Query: ").strip()
@@ -77,10 +71,10 @@ if __name__ == "__main__":
             print("Exiting...")
             break
 
-        top_chunks = retrieve(query, k=10)
+        top_chunks = retrieve(query, k=TOP_K)
         if not top_chunks:
             print("No relevant chunks found.\n")
             continue
 
-        for i, chunk in enumerate(top_chunks, start=1):
-            print(f"--- Chunk {i} ---\n{chunk}\n")
+        for i, (chunk, score) in enumerate(top_chunks, start=1):
+            print(f"--- Chunk {i} (score: {score:.4f}) ---\n{chunk}\n")
